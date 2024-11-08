@@ -21,6 +21,11 @@ jobs:
         echo "FILE_DIR=./files" >> $GITHUB_ENV
         echo "BACKUP_DIR=./backup" >> $GITHUB_ENV
 
+    - name: Create directories
+      run: |
+        mkdir -p $FILE_DIR
+        mkdir -p $BACKUP_DIR
+
     - name: Create a file
       run: |
         echo "Hello, GitHub Actions!" > $FILE_DIR/example.txt
@@ -30,6 +35,10 @@ jobs:
       run: |
         echo "This file is managed by GitHub Actions." >> $FILE_DIR/example.txt
         echo "Appended text to file: $FILE_DIR/example.txt"
+
+    - name: Display the file
+      run: |
+        cat $FILE_DIR/example.txt
 
     - name: Move the file
       run: |
