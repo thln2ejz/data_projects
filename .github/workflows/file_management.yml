@@ -1,0 +1,52 @@
+name: File Management Workflow
+
+on:
+  push:
+    branches:
+      - test-workflow
+  pull_request:
+    branches:
+      - test-workflow
+
+jobs:
+  file-management:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code from repository
+      uses: actions/checkout@v3
+
+    - name: Set up environment variables
+      run: |
+        echo "FILE_DIR=./files" >> $GITHUB_ENV
+        echo "BACKUP_DIR=./backup" >> $GITHUB_ENV
+
+    - name: Create a file
+      run: |
+        echo "Hello, GitHub Actions!" > $FILE_DIR/example.txt
+        echo "Created file at $FILE_DIR/example.txt"
+
+    - name: Modify the file
+      run: |
+        echo "This file is managed by GitHub Actions." >> $FILE_DIR/example.txt
+        echo "Appended text to file: $FILE_DIR/example.txt"
+
+    - name: Move the file
+      run: |
+        mkdir -p $BACKUP_DIR
+        mv $FILE_DIR/example.txt $BACKUP_DIR/example.txt
+        echo "Moved file to backup directory: $BACKUP_DIR/example.txt"
+
+    - name: Delete old file
+      run: |
+        OLD_FILE=$FILE_DIR/old_file.txt
+        if [ -f "$OLD_FILE" ]; then
+          rm "$OLD_FILE"
+          echo "Deleted old file: $OLD_FILE"
+        else
+          echo "No old file to delete."
+        fi
+
+    - name: Final cleanup and status
+      run: |
+        echo "File operations completed."
